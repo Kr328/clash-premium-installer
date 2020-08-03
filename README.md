@@ -1,6 +1,6 @@
 # Clash Premiun Installer
 
-Simple clash premiun core with full tun support for Linux.
+Simple clash premiun core installer with full tun support for Linux.
 
 ### Usage
 
