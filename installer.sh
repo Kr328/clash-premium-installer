@@ -44,9 +44,9 @@ function _install() {
     echo "Please download it from https://github.com/Dreamacro/clash/releases/tag/premium, and rename to ./clash"
     fi
 
-    assert install -d -m 755 /usr/lib/clash
+    assert install -d -m 0755 /usr/lib/clash
 
-    assert install -m 755 ./clash /usr/bin/clash
+    assert install -m 0755 ./clash /usr/bin/clash
 
     assert install -m 0755 scripts/bypass-proxy-pid /usr/bin/bypass-proxy-pid
     assert install -m 0755 scripts/bypass-proxy /usr/bin/bypass-proxy
