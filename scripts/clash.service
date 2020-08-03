@@ -1,0 +1,11 @@
+[Unit]
+Description=A rule based proxy tunnel
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=+/usr/lib/clash/setup-cgroup.sh
+ExecStart=/usr/bin/bypass-proxy /usr/bin/clash -d /srv/proxy/clash
+
+[Install]
+WantedBy=multi-user.target
