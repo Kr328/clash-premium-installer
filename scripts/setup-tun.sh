@@ -25,5 +25,18 @@ iptables -t mangle -A CLASH -d 224.0.0.0/4 -j RETURN
 iptables -t mangle -A CLASH -d 172.16.0.0/12 -j RETURN
 iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
 
+iptables -t mangle -N CLASH_FORWARD
+iptables -t mangle -F CLASH_FORWARD
+iptables -t mangle -A CLASH_FORWARD -d 127.0.0.0/8 -j RETURN
+iptables -t mangle -A CLASH_FORWARD -d 10.0.0.0/8 -j RETURN
+iptables -t mangle -A CLASH_FORWARD -d 192.168.0.0/16 -j RETURN
+iptables -t mangle -A CLASH_FORWARD -d 224.0.0.0/4 -j RETURN
+iptables -t mangle -A CLASH_FORWARD -d 172.16.0.0/12 -j RETURN
+iptables -t mangle -A CLASH_FORWARD -j MARK --set-mark "$PROXY_FWMARK"
+
 iptables -t mangle -I OUTPUT -j CLASH
-iptables -t mangle -I PREROUTING ! -s 127.0.0.0/8 -j MARK --set-mark "$PROXY_FWMARK"
+iptables -t mangle -I PREROUTING -j CLASH_FORWARD
+
+sysctl -w net/ipv4/ip_forward=1
+
+exit 0

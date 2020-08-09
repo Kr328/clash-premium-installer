@@ -5,7 +5,7 @@ After=network-online.target
 [Service]
 Type=simple
 ExecStartPre=+/usr/lib/clash/setup-cgroup.sh
-ExecStart=/usr/bin/bypass-proxy /usr/bin/clash -d /srv/proxy/clash
+ExecStart=/usr/bin/bypass-proxy /usr/bin/clash -d /srv/clash
 
 [Install]
 WantedBy=multi-user.target

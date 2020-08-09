@@ -45,6 +45,7 @@ function _install() {
     fi
 
     assert install -d -m 0755 /usr/lib/clash
+    assert install -d -m 0644 /srv/clash/
 
     assert install -m 0755 ./clash /usr/bin/clash
 
@@ -60,7 +61,7 @@ function _install() {
 
     echo "Install successfully"
     echo ""
-    echo "Home directory on /srv/proxy/clash"
+    echo "Home directory on /srv/clash"
     echo ""
     echo "Use 'systemctl start clash' to start"
     echo "Use 'systemctl enable clash' to enable auto-restart on boot"

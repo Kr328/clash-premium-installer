@@ -12,11 +12,12 @@ ip route del default dev "$PROXY_TUN_DEVICE_NAME" table "$PROXY_ROUTE_TABLE"
 ip rule del fwmark "$PROXY_FWMARK" lookup "$PROXY_ROUTE_TABLE"
 
 iptables -t mangle -D OUTPUT -j CLASH
-iptables -t mangle -D PREROUTING -m set ! --match-set localnetwork dst -j MARK --set-mark "$PROXY_FWMARK"
+iptables -t mangle -D PREROUTING -j CLASH_FORWARD
 
 iptables -t mangle -F CLASH
 iptables -t mangle -X CLASH
 
-ipset destroy localnetwork
+iptables -t mangle -F CLASH_FORWARD
+iptables -t mangle -X CLASH_FORWARD
 
 exit 0
