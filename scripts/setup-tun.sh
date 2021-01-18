@@ -8,14 +8,12 @@ ip rule del fwmark "$NETFILTER_MARK" lookup "$IPROUTE2_TABLE_ID" > /dev/null 2> 
 ip rule add fwmark "$NETFILTER_MARK" lookup "$IPROUTE2_TABLE_ID"
 
 nft -f - << EOF
-
 define LOCAL_SUBNET = {127.0.0.0/8, 224.0.0.0/4, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12}
-define TUN_DEVICE = utun
 
-table inet clash
-flush table inet clash
+table clash
+flush table clash
 
-table inet clash {
+table clash {
     chain local {
         type route hook output priority 0; policy accept;
         
@@ -46,8 +44,8 @@ table inet clash {
         
         meta cgroup $BYPASS_CGROUP_CLASSID accept
         
-        udp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
-        tcp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
+        udp dport 53 dnat $FORWARD_DNS_REDIRECT
+        tcp dport 53 dnat $FORWARD_DNS_REDIRECT
     }
     
     chain forward-dns-redirect {
@@ -55,11 +53,10 @@ table inet clash {
         
         ip protocol != { tcp, udp } accept
         
-        udp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
-        tcp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
+        udp dport 53 dnat $FORWARD_DNS_REDIRECT
+        tcp dport 53 dnat $FORWARD_DNS_REDIRECT
     }
 }
-
 EOF
 
 sysctl -w net/ipv4/ip_forward=1
