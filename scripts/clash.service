@@ -1,6 +1,6 @@
 [Unit]
 Description=A rule based proxy tunnel
-After=network-online.target
+After=network-online.target nftables.service iptabels.service
 
 [Service]
 Type=simple

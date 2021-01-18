@@ -2,19 +2,25 @@
 
 Simple clash premiun core installer with full tun support for Linux.
 
+
+
 ### Usage
 
-- Clone installer
-  ```bash
-  git clone https://github.com/Kr328/clash-premium-installer
-  cd clash-premium-installer
-  ```
+1. Install dependencies **git**, **nftables**, **iproute2**
 
-- Download clash core [link](https://github.com/Dreamacro/clash/releases/tag/premium)
+2. Clone repository
 
-- Uncompress clash core and rename it to `./clash`
+   ```bash
+   git clone https://github.com/Kr328/clash-premium-installer
+   cd clash-premium-installer
+   ```
 
-- Run Installer
-  ```bash
-  ./installer.sh install
-  ```
+3. Download clash core [link](https://github.com/Dreamacro/clash/releases/tag/premium)
+
+4. Extract and rename it to `./clash`
+
+5. Run Installer
+
+   ```bash
+   ./installer.sh install
+   ```

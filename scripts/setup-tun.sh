@@ -1,41 +1,66 @@
 #!/bin/bash
 
-PROXY_BYPASS_CGROUP="0x16200000"
-PROXY_FWMARK="0x162"
-PROXY_ROUTE_TABLE="0x162"
-PROXY_TUN_DEVICE_NAME="utun"
+. /etc/default/clash
 
-/usr/lib/clash/clean-tun.sh
+ip route replace default dev utun table "$IPROUTE2_TABLE_ID"
 
-sleep 0.5
+ip rule del fwmark "$NETFILTER_MARK" lookup "$IPROUTE2_TABLE_ID" > /dev/null 2> /dev/null
+ip rule add fwmark "$NETFILTER_MARK" lookup "$IPROUTE2_TABLE_ID"
 
-ip route replace default dev "$PROXY_TUN_DEVICE_NAME" table "$PROXY_ROUTE_TABLE"
+nft -f - << EOF
 
-ip rule add fwmark "$PROXY_FWMARK" lookup "$PROXY_ROUTE_TABLE"
+define LOCAL_SUBNET = {127.0.0.0/8, 224.0.0.0/4, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12}
+define TUN_DEVICE = utun
 
-iptables -t mangle -N CLASH
-iptables -t mangle -F CLASH
-iptables -t mangle -A CLASH -m cgroup --cgroup "$PROXY_BYPASS_CGROUP" -j RETURN
-iptables -t mangle -A CLASH -p tcp --dport 53 -j MARK --set-mark "$PROXY_FWMARK"
-iptables -t mangle -A CLASH -p udp --dport 53 -j MARK --set-mark "$PROXY_FWMARK"
-iptables -t mangle -A CLASH -d 127.0.0.0/8 -j RETURN
-iptables -t mangle -A CLASH -d 10.0.0.0/8 -j RETURN
-iptables -t mangle -A CLASH -d 192.168.0.0/16 -j RETURN
-iptables -t mangle -A CLASH -d 224.0.0.0/4 -j RETURN
-iptables -t mangle -A CLASH -d 172.16.0.0/12 -j RETURN
-iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
+table inet clash
+flush table inet clash
 
-iptables -t mangle -N CLASH_FORWARD
-iptables -t mangle -F CLASH_FORWARD
-iptables -t mangle -A CLASH_FORWARD -d 127.0.0.0/8 -j RETURN
-iptables -t mangle -A CLASH_FORWARD -d 10.0.0.0/8 -j RETURN
-iptables -t mangle -A CLASH_FORWARD -d 192.168.0.0/16 -j RETURN
-iptables -t mangle -A CLASH_FORWARD -d 224.0.0.0/4 -j RETURN
-iptables -t mangle -A CLASH_FORWARD -d 172.16.0.0/12 -j RETURN
-iptables -t mangle -A CLASH_FORWARD -j MARK --set-mark "$PROXY_FWMARK"
+table inet clash {
+    chain local {
+        type route hook output priority 0; policy accept;
+        
+        ip protocol != { tcp, udp } accept
+        
+        meta cgroup $BYPASS_CGROUP_CLASSID accept
+        ip daddr \$LOCAL_SUBNET accept
+        
+        ct state new ct mark set $NETFILTER_MARK
+        ct mark $NETFILTER_MARK mark set $NETFILTER_MARK
+    }
+    
+    chain forward {
+        type filter hook prerouting priority 0; policy accept;
+        
+        ip protocol != { tcp, udp } accept
+    
+        iif utun accept
+        ip daddr \$LOCAL_SUBNET accept
+        
+        mark set $NETFILTER_MARK
+    }
+    
+    chain local-dns-redirect {
+        type nat hook output priority 0; policy accept;
+        
+        ip protocol != { tcp, udp } accept
+        
+        meta cgroup $BYPASS_CGROUP_CLASSID accept
+        
+        udp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
+        tcp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
+    }
+    
+    chain forward-dns-redirect {
+        type nat hook prerouting priority 0; policy accept;
+        
+        ip protocol != { tcp, udp } accept
+        
+        udp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
+        tcp dport 53 dnat ip to $FORWARD_DNS_REDIRECT
+    }
+}
 
-iptables -t mangle -I OUTPUT -j CLASH
-iptables -t mangle -I PREROUTING -j CLASH_FORWARD
+EOF
 
 sysctl -w net/ipv4/ip_forward=1
 
