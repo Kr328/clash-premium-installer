@@ -43,6 +43,7 @@ table clash {
         ip protocol != { tcp, udp } accept
         
         meta cgroup $BYPASS_CGROUP_CLASSID accept
+        ip daddr 127.0.0.0/8 accept
         
         udp dport 53 dnat $FORWARD_DNS_REDIRECT
         tcp dport 53 dnat $FORWARD_DNS_REDIRECT
