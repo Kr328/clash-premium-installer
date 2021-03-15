@@ -1,0 +1,18 @@
+# =i-g-n-o-r-e= # this file will auto append to your clash subscribe config file
+# =i-g-n-o-r-e=
+dns: # =i-g-n-o-r-e=
+  enable: true # =i-g-n-o-r-e=
+  listen: 0.0.0.0:1053 # =i-g-n-o-r-e=
+  # fake-ip-range: 198.18.0.1/16 # =i-g-n-o-r-e=
+  enhanced-mode: redir-host # =i-g-n-o-r-e=
+  nameserver: # =i-g-n-o-r-e=
+    - 114.114.114.114 # =i-g-n-o-r-e=
+# =i-g-n-o-r-e=
+tun: # =i-g-n-o-r-e=
+  enable: true # =i-g-n-o-r-e=
+  #stack: system # =i-g-n-o-r-e=
+  stack: gvisor # =i-g-n-o-r-e=
+  dns-hijack: # =i-g-n-o-r-e=
+    - 1.0.0.1:53 # =i-g-n-o-r-e=
+# =i-g-n-o-r-e=
+interface-name: enp0s3 # =i-g-n-o-r-e=

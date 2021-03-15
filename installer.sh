@@ -58,6 +58,10 @@ function _install() {
     assert install -m 0700 scripts/setup-tun.sh /usr/lib/clash/setup-tun.sh
     assert install -m 0700 scripts/setup-cgroup.sh /usr/lib/clash/setup-cgroup.sh
 
+    assert install -m 0700 scripts/start-clash.sh /srv/clash/start-clash.sh
+    assert install -m 0700 scripts/stop-clash.sh /srv/clash/stop-clash.sh
+    assert install -m 0644 scripts/append.yaml /srv/clash/append.yaml
+
     assert install -m 0644 scripts/clash.service /usr/lib/systemd/system/clash.service
     assert install -m 0644 scripts/99-clash.rules /usr/lib/udev/rules.d/99-clash.rules
 
@@ -65,8 +69,10 @@ function _install() {
     echo ""
     echo "Home directory at /srv/clash"
     echo ""
-    echo "All dns traffic will be redirected to 1.0.0.1:53"
-    echo "Please use clash core's 'tun.dns-hijack' to handle it"
+    echo "If you do not set clash subscribe link or want to change clash subscribe link"
+    echo "Please edit '/usr/lib/systemd/system/clash.service' . When finished please run 'systemctl daemon-reload' "
+    # echo "All dns traffic will be redirected to 1.0.0.1:53"
+    # echo "Please use clash core's 'tun.dns-hijack' to handle it"
     echo ""
     echo "Use 'systemctl start clash' to start"
     echo "Use 'systemctl enable clash' to enable auto-restart on boot"
@@ -88,6 +94,9 @@ function _uninstall() {
     rm -rf /usr/bin/bypass-proxy-uid
     rm -rf /usr/bin/bypass-proxy
     rm -rf /etc/default/clash
+    rm -rf /srv/clash/start-clash.sh
+    rm -rf /srv/clash/stop-clash.sh
+    rm -rf /srv/clash/append.yaml
 
     echo "Uninstall successfully"
 
@@ -95,7 +104,7 @@ function _uninstall() {
 }
 
 function _help() {
-    echo "Clash Premiun Installer"
+    echo "Clash Premiun Installer(Please run as root!)"
     echo ""
     echo "Usage: ./installer.sh [option]"
     echo ""
