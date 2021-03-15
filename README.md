@@ -30,3 +30,7 @@ Simple clash premiun core installer with full tun support for Linux.
 
 <br/><br/><br/>
 **If you do not set clash subscribe link or want to change clash subscribe link, Please edit `/usr/lib/systemd/system/clash.service` . When finished please run `systemctl daemon-reload`**
+
+### Clash web
+
+[clash.razord.top](http://clash.razord.top/)
