@@ -11,7 +11,8 @@ ExecStart=/srv/clash/start-clash.sh
 ExecStop=/srv/clash/stop-clash.sh
 Environment="CLASH_HOME=/srv/clash"
 
-Environment="CLASH_URL=http://127.0.0.1:8080/sub" # http://127.0.0.1:8080/sub is your subscribe address. 
+Environment="CLASH_URL=http://127.0.0.1:8080/sub" 
+# http://127.0.0.1:8080/sub is your subscribe address. 
 # note that subscribe address shouldn't have "&" symbol, 
 # if it have, you should convert it to a short url
 

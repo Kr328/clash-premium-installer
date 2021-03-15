@@ -12,5 +12,6 @@ else
     TIME=`date '+%Y-%m-%d_%H:%M:%S'`
     cp ${CLASH_HOME}/config.yaml "${CLASH_HOME}/config.yaml.bak${TIME}"
     curl -L -o ${CLASH_HOME}/config.yaml ${CLASH_URL}
+    cat ${CLASH_HOME}/append.yaml >> ${CLASH_HOME}/config.yaml
     /usr/bin/bypass-proxy /usr/bin/clash -d /srv/clash
 fi
