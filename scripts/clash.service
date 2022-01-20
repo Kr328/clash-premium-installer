@@ -1,10 +1,9 @@
 [Unit]
 Description=A rule based proxy tunnel
-After=network-online.target nftables.service iptabels.service
+After=network-online.target nftables.service iptabels.service NetworkManager.service
 
 [Service]
 Type=simple
-ExecStartPre=+/usr/lib/clash/setup-cgroup.sh
 ExecStart=/usr/bin/bypass-proxy /usr/bin/clash -d /srv/clash
 
 [Install]

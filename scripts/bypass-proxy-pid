@@ -1,12 +1,11 @@
 #!/bin/bash
 
 if [ "$#" != "1" ];then
-exit 1
+    exit 1
 fi
 
 if [ ! -d "/sys/fs/cgroup/net_cls/bypass_proxy" ];then
-echo "cgroup not setup" >&2
-exit 1
+    /usr/lib/clash/setup-cgroup.sh
 fi
 
 echo $1 > /sys/fs/cgroup/net_cls/bypass_proxy/tasks

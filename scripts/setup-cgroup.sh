@@ -9,7 +9,7 @@ fi
 if [ ! -d "/sys/fs/cgroup/net_cls" ];then
     mkdir -p /sys/fs/cgroup/net_cls
     
-    mount -onet_cls -t cgroup net_cls /sys/fs/cgroup/net_cls
+    mount -o net_cls -t cgroup net_cls /sys/fs/cgroup/net_cls
 fi
 
 mkdir -p /sys/fs/cgroup/net_cls/bypass_proxy
