@@ -2,16 +2,19 @@
 
 . /etc/default/clash
 
-if [ -d "/sys/fs/cgroup/net_cls/bypass_proxy" ];then
-    exit 0
-fi
+function assert() {
+    if ! "$@"; then
+        echo "'$*' failed"
+        exit 1
+    fi
+}
 
-if [ ! -d "/sys/fs/cgroup/net_cls" ];then
-    mkdir -p /sys/fs/cgroup/net_cls
+if [[ ! -d "/sys/fs/cgroup/net_cls" ]];then
+    assert mkdir -p /sys/fs/cgroup/net_cls
     
-    mount -o net_cls -t cgroup net_cls /sys/fs/cgroup/net_cls
+    assert mount -t cgroup -o net_cls net_cls /sys/fs/cgroup/net_cls
 fi
 
-mkdir -p /sys/fs/cgroup/net_cls/bypass_proxy
-echo "$BYPASS_CGROUP_CLASSID" > /sys/fs/cgroup/net_cls/bypass_proxy/net_cls.classid
-chmod 666 /sys/fs/cgroup/net_cls/bypass_proxy/tasks
+assert mkdir -p /sys/fs/cgroup/net_cls/bypass_proxy
+echo "$BYPASS_CGROUP_CLASSID" | assert tee /sys/fs/cgroup/net_cls/bypass_proxy/net_cls.classid
+assert chmod 666 /sys/fs/cgroup/net_cls/bypass_proxy/tasks
