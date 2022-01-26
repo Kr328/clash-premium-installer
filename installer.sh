@@ -88,7 +88,7 @@ function _install() {
 
     _remove_legacy_files
 
-    assert systemctl disable --now clash
+    systemctl disable --now clash
     
     assert install -d -m 0755 /etc/default/
     assert install -d -m 0755 /usr/lib/clash/
