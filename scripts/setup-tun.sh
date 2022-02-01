@@ -31,7 +31,7 @@ table clash {
         
         ip protocol != { tcp, udp } accept
     
-        iif utun accept
+        iifname utun accept
         ip daddr \$LOCAL_SUBNET accept
         
         mark set $NETFILTER_MARK
