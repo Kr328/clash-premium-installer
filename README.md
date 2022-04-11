@@ -2,7 +2,11 @@
 
 Simple clash premiun core installer with full tun support for Linux.
 
-
+**DEPRECATED: use auto-route & auto-detect-interface instead.**
+**DEPRECATED: use auto-route & auto-detect-interface instead.**
+**DEPRECATED: use auto-route & auto-detect-interface instead.**
+**DEPRECATED: use auto-route & auto-detect-interface instead.**
+**DEPRECATED: use auto-route & auto-detect-interface instead.**
 
 ### Usage
 
