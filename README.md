@@ -10,7 +10,7 @@ Simple clash premiun core installer with full tun support for Linux.
 
 ### Usage
 
-1. Install dependencies **git**, **nftables**, **iproute2**
+1. Install dependencies **git**, **nftables**, **iproute2**, **jq**
 
 2. Clone repository
 
